@@ -2,23 +2,31 @@ class Application
 
   def call(env)
     request = Rack::Request.new(env)
-    resp = Rack::Response.new
     if request.get? && request.path == '/'
-      resp.write( File.read('./app/views/index.html') )
+      render('index.html')
     elsif request.get? && request.path == '/dogs'
-      resp.write( File.read('./app/views/dogs.html') )
+      render('dogs.html')
+    elsif request.get? && request.path == '/books' && request.params["id"]
+      @book = Book.find(request.params["id"])
+      render("books/show.html.erb")
     elsif request.get? && request.path == '/books'
       @books = Book.all
-      template = File.read('./app/views/books/index.html.erb')
-      erb_instance = ERB.new( template )
-      result = erb_instance.result( binding )
-      resp.write( result )
+      render('books/index.html.erb')
     else
       resp = Rack::Response.new('Not Found', 404)
+      resp.finish
     end
-    resp.finish
     # if the person makes a request to home, I want to respond with 'Welcome Home'
     # if they make a request to '/dogs' i want to respond with 'Woof!!'
+  end
+
+  def render(file_path)
+    resp = Rack::Response.new
+    template = File.read("./app/views/#{file_path}")
+    erb_instance = ERB.new( template )
+    result = erb_instance.result( binding )
+    resp.write( result )
+    resp.finish
   end
 
 end

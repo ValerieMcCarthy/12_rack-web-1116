@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome to Our App!</title>
+  </head>
+  <body>
+    <h1>One Book</h1>
+
+    <h2><%= @book.title %> by <%= @book.author.full_name %></h2>
+    <p><%= @book.snippet %></p>
+
+    <a href="/books">Back to All Books</a>
+  </body>
+</html>
